@@ -19,20 +19,42 @@ namespace YloFlix
             this.Episode = episode;
         }
 
-        public void Launch(FileReader fileReader)
+        public void Launch()
         {
-            int nbThread = fileReader.NbLines / 50;
+            int nbThread = this.FileReader.NbLines / 50;
             Thread[] tThread = new Thread[nbThread];
             for(int i = 0; i < nbThread; i++)
             {
                 tThread[i] = new Thread(() =>
                 {
-                    var workingQ = fileReader.Pop(50);
+                    while (true)
+                    {
+                        try
+                        {
+                            var workingQ = this.FileReader.Pop(50);
+                            if (workingQ.Count == 0)
+                            {
+                                return;
+                            }
+                            while (workingQ.Count > 0)
+                            {
+                                string line = workingQ.Pop();
+                                if (this.MyStrPos(line, "<div id=\"container95\">"))
+                                {
+                                    return;
+                                }
+                            }
+                        }catch(Exception e)
+                        {
+                            Utils.Log(e.Message);
+                        }
+                    }
                 });
+                tThread[i].Start();
             }
         }
 
-        public bool myStrPos(string str, string keyword)
+        public bool MyStrPos(string str, string keyword)
         {
             int x = 0;
             int j = str.Length;

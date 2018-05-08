@@ -37,7 +37,7 @@ namespace YloFlix
                 }
                 catch (InvalidOperationException)
                 {
-                    break;
+                    return stack;
                 }
             }
             return stack;

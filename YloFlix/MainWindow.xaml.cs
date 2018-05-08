@@ -25,7 +25,12 @@ namespace YloFlix
             InitializeComponent();
             this.AllowDrop = true;
             this.DragEnter += MainWindow_DragEnter;
-
+            var rIO = new RemoteIO("http://www.addic7ed.com/");
+            var fileReader = new FileReader(rIO.Cache());
+            fileReader.PutFileInMemory();
+            Utils.Log(fileReader.NbLines.ToString());
+            var parser = new Parser(fileReader, null);
+            parser.Launch();
         }
 
         private void MainWindow_DragOver(object sender, DragEventArgs e)

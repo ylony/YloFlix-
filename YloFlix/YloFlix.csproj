@@ -57,6 +57,7 @@
     <Compile Include="Episode.cs" />
     <Compile Include="FileReader.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="RemoteIO.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
