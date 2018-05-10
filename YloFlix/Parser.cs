@@ -13,19 +13,26 @@ namespace YloFlix
 
         private Episode Episode { get; set; }
 
+        private string Line { get; set; }
+
+        private Thread[] TThread { get; set; }
+
         public Parser(FileReader fileReader, Episode episode)
         {
             this.FileReader = fileReader;
             this.Episode = episode;
         }
 
-        public void Launch()
+        public void Launch(string keywords)
         {
             int nbThread = this.FileReader.NbLines / 50;
-            Thread[] tThread = new Thread[nbThread];
+            nbThread = 1;
+            Utils.Log(nbThread.ToString() + " " + this.FileReader.NbLines.ToString());
+            Utils.Log(keywords);
+            this.TThread = new Thread[nbThread];
             for(int i = 0; i < nbThread; i++)
             {
-                tThread[i] = new Thread(() =>
+                this.TThread[i] = new Thread(() =>
                 {
                     while (true)
                     {
@@ -39,8 +46,10 @@ namespace YloFlix
                             while (workingQ.Count > 0)
                             {
                                 string line = workingQ.Pop();
-                                if (this.MyStrPos(line, "<div id=\"container95\">"))
+                                if (this.MyStrPos(line, keywords))
                                 {
+                                    Utils.Log("found");
+                                    this.Line = line;
                                     return;
                                 }
                             }
@@ -50,7 +59,8 @@ namespace YloFlix
                         }
                     }
                 });
-                tThread[i].Start();
+                Utils.Log("Thread launch");
+                this.TThread[i].Start();
             }
         }
 
@@ -74,6 +84,16 @@ namespace YloFlix
                 }
             }
             return false;
+        }
+
+        public void getDownloadLink()
+        {
+            this.Launch("<td width=\"21%\" class=\"language\">French");
+            foreach(Thread thread in this.TThread)
+            {
+                thread.Join();
+            }
+            Utils.Log(this.Line);
         }
     }
 }

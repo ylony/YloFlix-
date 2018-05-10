@@ -28,14 +28,14 @@ namespace YloFlix
             {
                 if(!Regex.IsMatch(word, "^S(\\d{2})E(\\d{2}$)"))
                 {
-                    showName += word;
+                    showName += word + " ";
                 }
                 else
                 {
                     string[] data = word.Split('E');
                     season = int.Parse(data[0].Substring(1));
                     number = int.Parse(data[1]);
-                    return new Episode(number, season, showName);
+                    return new Episode(number, season, showName.TrimEnd(' '));
                 }
 
             }

@@ -25,12 +25,16 @@ namespace YloFlix
             InitializeComponent();
             this.AllowDrop = true;
             this.DragEnter += MainWindow_DragEnter;
+            /*
             var rIO = new RemoteIO("http://www.addic7ed.com/");
             var fileReader = new FileReader(rIO.Cache());
             fileReader.PutFileInMemory();
             Utils.Log(fileReader.NbLines.ToString());
             var parser = new Parser(fileReader, null);
             parser.Launch();
+            var episode = new Episode(4, 4, "Arrow");
+            Utils.Log(episode.toAddictedUrl());
+            */
         }
 
         private void MainWindow_DragOver(object sender, DragEventArgs e)
@@ -52,6 +56,13 @@ namespace YloFlix
                 try
                 {
                     Episode episode = Utils.ConvertStrToEpisode(fileName);
+                    Utils.Log(episode.toAddictedUrl());
+                    var rIO = new RemoteIO(episode.toAddictedUrl());
+                    var tmp = rIO.Cache();
+                    var fileReader = new FileReader(tmp);
+                    fileReader.PutFileInMemory();
+                    var parser = new Parser(fileReader, episode);
+                    parser.getDownloadLink();
                 }
                 catch (Exception ex)
                 {

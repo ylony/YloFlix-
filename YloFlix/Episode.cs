@@ -19,6 +19,11 @@ namespace YloFlix
             this.ShowName = showName;
         }
 
+        public string toAddictedUrl()
+        {
+            return "http://www.addic7ed.com/search.php?search=" + this.ShowName + "+s" + this.Season + "e" + this.Number + "&Submit=Search";
+        }
+
         override
         public string ToString()
         {
