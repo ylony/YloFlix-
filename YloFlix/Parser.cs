@@ -17,16 +17,24 @@ namespace YloFlix
 
         private Thread[] TThread { get; set; }
 
+        private ICollection<string> tLines { get; set; }
+
+        private int splitLines;
+
+        private int indexFound;
+
         public Parser(FileReader fileReader, Episode episode)
         {
             this.FileReader = fileReader;
             this.Episode = episode;
+            this.tLines = new LinkedList<string>();
+            this.Line = null;
         }
 
         public void Launch(string keywords)
         {
-            int nbThread = this.FileReader.NbLines / 50;
-            nbThread = 1;
+            int nbThread = Environment.ProcessorCount;
+            this.splitLines = this.FileReader.NbLines / nbThread;
             Utils.Log(nbThread.ToString() + " " + this.FileReader.NbLines.ToString());
             Utils.Log(keywords);
             this.TThread = new Thread[nbThread];
@@ -34,11 +42,13 @@ namespace YloFlix
             {
                 this.TThread[i] = new Thread(() =>
                 {
+                    int x = 0;
+                    int index = i;
                     while (true)
                     {
                         try
                         {
-                            var workingQ = this.FileReader.Pop(50);
+                            var workingQ = this.FileReader.Pop(this.splitLines);
                             if (workingQ.Count == 0)
                             {
                                 return;
@@ -46,11 +56,30 @@ namespace YloFlix
                             while (workingQ.Count > 0)
                             {
                                 string line = workingQ.Pop();
-                                if (this.MyStrPos(line, keywords))
+                                if (this.Line != null)
                                 {
-                                    Utils.Log("found");
-                                    this.Line = line;
-                                    return;
+                                    if (this.indexFound == index)
+                                    {
+                                        this.tLines.Add(line);
+                                        if (this.MyStrPos(line, "buttonDownload"))
+                                        {
+                                            return;
+                                        }
+                                        x++;
+                                    }
+                                    else
+                                    {
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+                                    if (this.MyStrPos(line, keywords))
+                                    {
+                                        Utils.Log("found thread : " + index);
+                                        this.Line = line;
+                                        this.indexFound = index;
+                                    }
                                 }
                             }
                         }catch(Exception e)
@@ -86,14 +115,15 @@ namespace YloFlix
             return false;
         }
 
-        public void getDownloadLink()
+        public string GetDownloadLink()
         {
             this.Launch("<td width=\"21%\" class=\"language\">French");
             foreach(Thread thread in this.TThread)
             {
                 thread.Join();
             }
-            Utils.Log(this.Line);
+            string line = this.tLines.Last();
+            return Utils.CutDownloadLinkFromStr(line);
         }
     }
 }

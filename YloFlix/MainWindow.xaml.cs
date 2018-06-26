@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace YloFlix
 {
@@ -25,16 +26,6 @@ namespace YloFlix
             InitializeComponent();
             this.AllowDrop = true;
             this.DragEnter += MainWindow_DragEnter;
-            /*
-            var rIO = new RemoteIO("http://www.addic7ed.com/");
-            var fileReader = new FileReader(rIO.Cache());
-            fileReader.PutFileInMemory();
-            Utils.Log(fileReader.NbLines.ToString());
-            var parser = new Parser(fileReader, null);
-            parser.Launch();
-            var episode = new Episode(4, 4, "Arrow");
-            Utils.Log(episode.toAddictedUrl());
-            */
         }
 
         private void MainWindow_DragOver(object sender, DragEventArgs e)
@@ -52,7 +43,7 @@ namespace YloFlix
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string file in files)
             {
-                string fileName = file.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                string fileName = file.Split(Path.DirectorySeparatorChar).Last();
                 try
                 {
                     Episode episode = Utils.ConvertStrToEpisode(fileName);
@@ -62,11 +53,19 @@ namespace YloFlix
                     var fileReader = new FileReader(tmp);
                     fileReader.PutFileInMemory();
                     var parser = new Parser(fileReader, episode);
-                    parser.getDownloadLink();
+                    string url = parser.GetDownloadLink();
+                    url = string.Concat("http://www.addic7ed.com", url);
+                    Utils.Log(url);
+                    WebClient webClient = new WebClient();
+                    string tmpSrt = Path.GetTempFileName();
+                    webClient.DownloadFile(url, tmpSrt);
+                    string subtitlePath = Path.ChangeExtension(file, ".srt");
+                    File.Move(tmpSrt, subtitlePath);
                 }
                 catch (Exception ex)
                 {
                     Utils.Log(ex.Message);
+
                 }
             }
         }

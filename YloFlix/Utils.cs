@@ -41,5 +41,35 @@ namespace YloFlix
             }
             throw new Exception("Can't translate that string into an episode object");
         }
+
+        public static string CutDownloadLinkFromStr(string line)
+        {
+            string keyword = "href=\"";
+            string dlLink = "";
+            int x = 0;
+            foreach(char c in line)
+            {
+                if (x == keyword.Length)
+                {
+                    if(c == '"')
+                    {
+                        return dlLink;
+                    }
+                    dlLink = string.Concat(dlLink, c);
+                }
+                else
+                {
+                    if (c == keyword[x])
+                    {
+                        x++;
+                    }
+                    else
+                    {
+                        x = 0;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

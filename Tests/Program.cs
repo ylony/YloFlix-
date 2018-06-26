@@ -12,17 +12,21 @@ namespace Tests
     {
         static void Main(string[] args)
         {
-            string str = "Coucou je suis Dimitri";
-            if (myStrPos(str, "Coucou je suis Dimitri"))
-            {
-                Utils.Log("Contient :)");
-            }
-            else
-            {
-                Utils.Log("Contient pas");
-            }
-            testSpeed();
-            Console.ReadKey(true);
+            /*
+                string str = "Coucou je suis Dimitri";
+                if (myStrPos(str, "Coucou je suis Dimitri"))
+                {
+                    Utils.Log("Contient :)");
+                }
+                else
+                {
+                    Utils.Log("Contient pas");
+                }
+                testSpeed();
+            */
+            //testGetCpu();
+            //Console.ReadKey(true);
+            testUseFromPHP();
         }
 
         public static void testSpeed()
@@ -75,6 +79,30 @@ namespace Tests
                 }
             }
             return false;
+        }
+
+        public static void testGetCpu()
+        {
+            Utils.Log(Environment.ProcessorCount.ToString());
+        }
+
+        public static void testUseFromPHP()
+        {
+            Utils.Log("Hello World !");
+        }
+
+        public static void testRemote()
+        {
+            /*
+            var rIO = new RemoteIO("http://www.addic7ed.com/");
+            var fileReader = new FileReader(rIO.Cache());
+            fileReader.PutFileInMemory();
+            Utils.Log(fileReader.NbLines.ToString());
+            var parser = new Parser(fileReader, null);
+            parser.Launch();
+            var episode = new Episode(4, 4, "Arrow");
+            Utils.Log(episode.toAddictedUrl());
+            */
         }
     }
 }
