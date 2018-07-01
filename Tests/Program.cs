@@ -26,7 +26,9 @@ namespace Tests
             */
             //testGetCpu();
             //Console.ReadKey(true);
-            testUseFromPHP();
+            //testUseFromPHP();
+            testRIO();
+            Console.ReadKey(true);
         }
 
         public static void testSpeed()
@@ -103,6 +105,12 @@ namespace Tests
             var episode = new Episode(4, 4, "Arrow");
             Utils.Log(episode.toAddictedUrl());
             */
+        }
+
+        public static void testRIO()
+        {
+            var rIO = new RemoteIO("rers");
+            rIO.Login();
         }
     }
 }

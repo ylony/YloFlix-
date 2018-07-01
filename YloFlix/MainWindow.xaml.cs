@@ -65,7 +65,6 @@ namespace YloFlix
                 catch (Exception ex)
                 {
                     Utils.Log(ex.Message);
-
                 }
             }
         }
