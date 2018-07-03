@@ -56,9 +56,7 @@ namespace YloFlix
                     string url = parser.GetDownloadLink();
                     url = string.Concat("http://www.addic7ed.com", url);
                     Utils.Log(url);
-                    WebClient webClient = new WebClient();
-                    string tmpSrt = Path.GetTempFileName();
-                    webClient.DownloadFile(url, tmpSrt);
+                    string tmpSrt = rIO.Download(url);
                     string subtitlePath = Path.ChangeExtension(file, ".srt");
                     File.Move(tmpSrt, subtitlePath);
                 }

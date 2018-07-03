@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Config.cs" />
     <Compile Include="Episode.cs" />
     <Compile Include="FileReader.cs" />
     <Compile Include="Parser.cs" />

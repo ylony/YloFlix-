@@ -21,7 +21,7 @@ namespace YloFlix
 
         public string toAddictedUrl()
         {
-            return "http://www.addic7ed.com/search.php?search=" + this.ShowName + "+s" + this.Season + "e" + this.Number + "&Submit=Search";
+            return "http://www.addic7ed.com/search.php?search=" + string.Join("+", this.ShowName.Split(' ')) + "+s" + this.Season + "e" + this.Number + "&Submit=Search";
         }
 
         override
